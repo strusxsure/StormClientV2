@@ -1,21 +1,27 @@
 {
   "schemaVersion": 1,
-  "id": "stormclient",
-  "version": "1.0.0",
-  "name": "Storm Client",
-  "description": "An advanced Fabric-based Minecraft client with HUD, GUI, and performance modules.",
-  "authors": ["Storm Dev Team"],
-  "contact": {
-    "homepage": "https://stormclient.dev",
-    "sources": "https://github.com/stormclient"
-  },
+  "id": "menuanimations",
+  "version": "${version}",
+  "name": "Menu Animations",
+  "description": "Adds fade-in and fade-out animations to menus.",
+  "authors": [
+    "You!"
+  ],
+  "contact": {},
   "license": "MIT",
-  "environment": "*",
+  "icon": "assets/menuanimations/icon.png",
+  "environment": "client",
   "entrypoints": {
-    "main": ["dev.storm.client.StormClient"]
+    "client": [
+      "com.menuanimations.MenuAnimations"
+    ]
   },
+  "mixins": [
+    "menuanimations.mixins.json"
+  ],
   "depends": {
-    "fabricloader": ">=0.14.10",
-    "fabric": "*"
+    "fabricloader": ">=0.15.11",
+    "fabric-api": "*",
+    "minecraft": "1.21"
   }
 }
