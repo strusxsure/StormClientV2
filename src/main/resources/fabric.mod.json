@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "stormclient",
+  "version": "1.0.0",
+  "name": "Storm Client",
+  "description": "An advanced Fabric-based Minecraft client with HUD, GUI, and performance modules.",
+  "authors": ["Storm Dev Team"],
+  "contact": {
+    "homepage": "https://stormclient.dev",
+    "sources": "https://github.com/stormclient"
+  },
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["dev.storm.client.StormClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.14.10",
+    "fabric": "*"
+  }
+}

@@ -1,0 +1,17 @@
+# Gradle
+.gradle/
+build/
+gradle/
+gradlew
+gradlew.bat
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# Other
+temp_mod_project/
+.DS_Store
