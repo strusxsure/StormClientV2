@@ -11,17 +11,11 @@
   "license": "MIT",
   "icon": "assets/menuanimations/icon.png",
   "environment": "client",
-  "entrypoints": {
-    "client": [
-      "com.menuanimations.MenuAnimations"
-    ]
-  },
   "mixins": [
     "menuanimations.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.15.11",
-    "fabric-api": "*",
     "minecraft": "1.21"
   }
 }
