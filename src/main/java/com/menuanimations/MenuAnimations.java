@@ -1,10 +1,6 @@
 package com.menuanimations;
 
-import net.fabricmc.api.ClientModInitializer;
-
-public class MenuAnimations implements ClientModInitializer {
-    @Override
-    public void onInitializeClient() {
-        // This entrypoint is suitable for setting up client-specific logic, such as rendering.
-    }
+public class MenuAnimations {
+    // This class is no longer needed as an entrypoint,
+    // but it's kept for future use.
 }
