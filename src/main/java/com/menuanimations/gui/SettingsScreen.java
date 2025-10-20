@@ -6,12 +6,15 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
-import java.awt.Color;
 
 public class SettingsScreen extends Screen {
 
     private ModConfig config;
     private String selectedAddon = "Menu Animation";
+
+    private int color(int r, int g, int b, int a) {
+        return (a << 24) | (r << 16) | (g << 8) | b;
+    }
 
     public SettingsScreen() {
         super(Text.of("Storm Settings"));
@@ -62,28 +65,28 @@ public class SettingsScreen extends Screen {
         int cornerRadius = 10;
 
         // Main settings panel with rounded corners
-        context.fill(panelX, panelY + cornerRadius, panelX + panelWidth, panelY + panelHeight - cornerRadius, new Color(30, 30, 30, 200).getRGB());
-        context.fill(panelX + cornerRadius, panelY, panelX + panelWidth - cornerRadius, panelY + panelHeight, new Color(30, 30, 30, 200).getRGB());
+        context.fill(panelX, panelY + cornerRadius, panelX + panelWidth, panelY + panelHeight - cornerRadius, color(30, 30, 30, 200));
+        context.fill(panelX + cornerRadius, panelY, panelX + panelWidth - cornerRadius, panelY + panelHeight, color(30, 30, 30, 200));
 
         // Header
-        context.fill(panelX, panelY, panelX + panelWidth, panelY + 30, new Color(20, 20, 20, 200).getRGB());
-        context.drawTextWithShadow(this.textRenderer, "⚡ StormClient", panelX + 10, panelY + 10, Color.WHITE.getRGB());
+        context.fill(panelX, panelY, panelX + panelWidth, panelY + 30, color(20, 20, 20, 200));
+        context.drawTextWithShadow(this.textRenderer, "⚡ StormClient", panelX + 10, panelY + 10, color(255, 255, 255, 255));
 
         // Sidebar
         int sidebarWidth = 100;
-        context.fill(panelX, panelY + 30, panelX + sidebarWidth, panelY + panelHeight, new Color(25, 25, 25, 200).getRGB());
+        context.fill(panelX, panelY + 30, panelX + sidebarWidth, panelY + panelHeight, color(25, 25, 25, 200));
 
         // Highlight selected addon
         if ("Menu Animation".equals(selectedAddon)) {
-             context.fill(panelX + 10, panelY + 40, panelX + sidebarWidth - 10, panelY + 60, new Color(50, 50, 50, 200).getRGB());
+             context.fill(panelX + 10, panelY + 40, panelX + sidebarWidth - 10, panelY + 60, color(50, 50, 50, 200));
         }
 
         // Change toggle button color based on state
         if ("Menu Animation".equals(selectedAddon)) {
             if(config.isMenuAnimationEnabled()) {
-                context.fill(panelX + sidebarWidth + 20, panelY + 40, panelX + sidebarWidth + 120, panelY + 60, new Color(255, 255, 0, 150).getRGB());
+                context.fill(panelX + sidebarWidth + 20, panelY + 40, panelX + sidebarWidth + 120, panelY + 60, color(255, 255, 0, 150));
             } else {
-                 context.fill(panelX + sidebarWidth + 20, panelY + 40, panelX + sidebarWidth + 120, panelY + 60, new Color(255, 0, 0, 150).getRGB());
+                 context.fill(panelX + sidebarWidth + 20, panelY + 40, panelX + sidebarWidth + 120, panelY + 60, color(255, 0, 0, 150));
             }
         }
     }
