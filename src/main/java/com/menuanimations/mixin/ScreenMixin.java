@@ -1,5 +1,6 @@
 package com.menuanimations.mixin;
 
+import com.menuanimations.animation.AnimationState;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -59,12 +60,5 @@ public abstract class ScreenMixin {
     @Inject(method = "render", at = @At("TAIL"))
     private void afterRender(CallbackInfo ci) {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-    }
-
-    @Unique
-    private enum AnimationState {
-        NONE,
-        FADE_IN,
-        FADE_OUT
     }
 }
