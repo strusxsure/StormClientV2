@@ -19,6 +19,7 @@ public abstract class ScreenMixin {
     @Unique
     private AnimationState animationState = AnimationState.FADE_IN;
 
+    /*
     @Inject(method = "init(Lnet/minecraft/client/MinecraftClient;II)V", at = @At("HEAD"))
     private void onInit(MinecraftClient client, int width, int height, CallbackInfo ci) {
         this.animationStartTime = System.currentTimeMillis();
@@ -33,6 +34,7 @@ public abstract class ScreenMixin {
             ci.cancel();
         }
     }
+    */
 
     @Inject(method = "render", at = @At("HEAD"))
     private void onRender(CallbackInfo ci) {
