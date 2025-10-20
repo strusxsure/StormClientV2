@@ -11,6 +11,11 @@
   "license": "MIT",
   "icon": "assets/menuanimations/icon.png",
   "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.menuanimations.MenuAnimations"
+    ]
+  },
   "mixins": [
     "menuanimations.mixins.json"
   ],

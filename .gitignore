@@ -1,15 +1,9 @@
 # Gradle
-.gradle
-build
+.gradle/
+build/
 gradle/
 gradlew
 gradlew.bat
-
-# Java
-*.class
-*.war
-*.ear
-hs_err_pid*
 
 # IDE
 .idea/
@@ -18,7 +12,6 @@ hs_err_pid*
 *.iws
 out/
 
-# OS
+# Other
+temp_mod_project/
 .DS_Store
-Thumbs.db
-target/
