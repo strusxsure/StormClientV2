@@ -3,7 +3,8 @@
   "package": "com.menuanimations.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "ScreenMixin"
+    "ScreenMixin",
+    "TitleScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1
