@@ -1,90 +1,69 @@
 package com.menuanimations.mixin;
 
-import com.menuanimations.animation.AnimationState;
 import com.menuanimations.config.ConfigManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 @Mixin(Screen.class)
-public abstract class ScreenMixin {
+public class ScreenMixin {
 
     @Unique
-    private long animationStartTime;
-
+    private long startTime = 0;
     @Unique
-    private AnimationState animationState = AnimationState.FADE_IN;
+    private boolean animating = false;
 
-    @Shadow
-    public int width;
-
-    @Shadow
-    public int height;
-
-    @Inject(method = "init(Lnet/minecraft/client/MinecraftClient;II)V", at = @At("HEAD"))
-    private void onInit(MinecraftClient client, int width, int height, CallbackInfo ci) {
+    @Inject(method = "init", at = @At("HEAD"))
+    private void onInit(CallbackInfo ci) {
         if (ConfigManager.getConfig().isMenuAnimationEnabled()) {
-            this.animationStartTime = System.currentTimeMillis();
-            this.animationState = AnimationState.FADE_IN;
-        }
-    }
-
-    @Inject(method = "close", at = @At("HEAD"), cancellable = true)
-    private void onClose(CallbackInfo ci) {
-        if (ConfigManager.getConfig().isMenuAnimationEnabled() && this.animationState != AnimationState.FADE_OUT) {
-            this.animationStartTime = System.currentTimeMillis();
-            this.animationState = AnimationState.FADE_OUT;
-            ci.cancel();
+            this.startTime = System.currentTimeMillis();
+            this.animating = true;
         }
     }
 
     @Inject(method = "render", at = @At("HEAD"))
     private void onRender(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        if (ConfigManager.getConfig().isMenuAnimationEnabled()) {
-            long elapsedTime = System.currentTimeMillis() - this.animationStartTime;
-            float duration = 700.0f;
-            float alpha = 1.0f;
-            float scale = 1.0f;
+        if (animating && ConfigManager.getConfig().isMenuAnimationEnabled()) {
+            long currentTime = System.currentTimeMillis();
+            long elapsedTime = currentTime - startTime;
+            float animationTime = ConfigManager.getConfig().getAnimationSpeed() * 1000.0f;
 
-            if (this.animationState == AnimationState.FADE_IN) {
-                if (elapsedTime < duration) {
-                    float progress = elapsedTime / duration;
-                    alpha = progress;
-                    scale = 0.95f + (progress * 0.05f);
-                } else {
-                    this.animationState = AnimationState.NONE;
-                }
-            } else if (this.animationState == AnimationState.FADE_OUT) {
-                if (elapsedTime < duration) {
-                    float progress = elapsedTime / duration;
-                    alpha = 1.0f - progress;
-                    scale = 1.0f - (progress * 0.05f);
-                } else {
-                    MinecraftClient.getInstance().setScreen(null);
-                }
-            }
+            float progress = Math.min(elapsedTime / animationTime, 1.0f);
 
+            // Fade-in and scale animation
+            float scale = 0.95f + (0.05f * progress);
+            float alpha = progress;
+
+            // Set the alpha for the fade-in effect
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
 
             context.getMatrices().push();
-            context.getMatrices().translate(this.width / 2.0, this.height / 2.0, 0.0);
+            // Use the screen's actual width and height for centering
+            context.getMatrices().translate(((Screen)(Object)this).width / 2.0, ((Screen)(Object)this).height / 2.0, 0);
             context.getMatrices().scale(scale, scale, 1.0f);
-            context.getMatrices().translate(-this.width / 2.0, -this.height / 2.0, 0.0);
+            context.getMatrices().translate(-((Screen)(Object)this).width / 2.0, -((Screen)(Object)this).height / 2.0, 0);
         }
     }
 
     @Inject(method = "render", at = @At("TAIL"))
-    private void afterRender(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        if (ConfigManager.getConfig().isMenuAnimationEnabled()) {
+    private void onRenderTail(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+        if (animating && ConfigManager.getConfig().isMenuAnimationEnabled()) {
             context.getMatrices().pop();
+            // Reset the shader color
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+            long currentTime = System.currentTimeMillis();
+            long elapsedTime = currentTime - startTime;
+            float animationTime = ConfigManager.getConfig().getAnimationSpeed() * 1000.0f;
+
+            if (elapsedTime >= animationTime) {
+                animating = false;
+            }
         }
     }
 }

@@ -3,7 +3,7 @@
   "id": "menuanimations",
   "version": "${version}",
   "name": "Menu Animations",
-  "description": "Adds fade-in and fade-out animations to menus.",
+  "description": "Adds fade-in and scale animations to menus, with a Feather-style settings screen.",
   "authors": [
     "You!"
   ],
@@ -21,6 +21,7 @@
   ],
   "depends": {
     "fabricloader": ">=0.15.11",
+    "fabric": "*",
     "minecraft": "1.21"
   }
 }

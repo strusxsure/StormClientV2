@@ -2,17 +2,17 @@ package com.menuanimations.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.fabricmc.loader.api.FabricLoader;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import net.fabricmc.loader.api.FabricLoader;
 
 public class ConfigManager {
+
     private static final File CONFIG_FILE = new File(FabricLoader.getInstance().getConfigDir().toFile(), "storm_settings.json");
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static ModConfig config;
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public static void loadConfig() {
         if (CONFIG_FILE.exists()) {
@@ -21,7 +21,8 @@ public class ConfigManager {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else {
+        }
+        if (config == null) {
             config = new ModConfig();
             saveConfig();
         }
