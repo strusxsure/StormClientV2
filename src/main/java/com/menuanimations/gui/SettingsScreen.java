@@ -2,98 +2,88 @@ package com.menuanimations.gui;
 
 import com.menuanimations.config.ConfigManager;
 import com.menuanimations.config.ModConfig;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.text.Text;
+import java.awt.Color;
 
 public class SettingsScreen extends Screen {
 
+    private final Screen parent;
     private ModConfig config;
-    private String selectedAddon = "Menu Animation";
+    private String selectedTab = "Animations";
 
-    private int color(int r, int g, int b, int a) {
-        return (a << 24) | (r << 16) | (g << 8) | b;
-    }
-
-    public SettingsScreen() {
+    public SettingsScreen(Screen parent) {
         super(Text.of("Storm Settings"));
+        this.parent = parent;
         this.config = ConfigManager.getConfig();
-        ShaderHelper.loadShader();
     }
 
     @Override
     protected void init() {
         super.init();
-        addButtons();
-    }
 
-    private void addButtons() {
-        this.clearChildren();
+        // Feather-style toggle
+        this.addDrawableChild(new FeatherToggleWidget(this.width / 2 - 100, this.height / 2 - 40, 200, 20, "Animation", config.isMenuAnimationEnabled(), (enabled) -> {
+            config.setMenuAnimationEnabled(enabled);
+            ConfigManager.saveConfig();
+        }));
+
+        // Animation speed slider
+        this.addDrawableChild(new SliderWidget(this.width / 2 - 100, this.height / 2 - 10, 200, 20, Text.of("Animation Speed: " + config.getAnimationSpeed()), config.getAnimationSpeed()) {
+            @Override
+            protected void updateMessage() {
+                setMessage(Text.of("Animation Speed: " + String.format("%.2f", value * 2.0f)));
+            }
+
+            @Override
+            protected void applyValue() {
+                config.setAnimationSpeed((float) this.value * 2.0f);
+                ConfigManager.saveConfig();
+            }
+        });
+
+        // Tabs
         int panelX = (this.width - 400) / 2;
         int panelY = (this.height - 250) / 2;
-        int sidebarWidth = 100;
-
-        // Sidebar button
-        this.addDrawableChild(ButtonWidget.builder(Text.of("Menu Animation"), button -> {
-            selectedAddon = "Menu Animation";
-            addButtons();
-        }).dimensions(panelX + 10, panelY + 40, sidebarWidth - 20, 20).build());
-
-        // Toggle button for the animation setting
-        if ("Menu Animation".equals(selectedAddon)) {
-            this.addDrawableChild(ButtonWidget.builder(
-                Text.of(config.isMenuAnimationEnabled() ? "ENABLED" : "DISABLED"),
-                button -> {
-                    config.setMenuAnimationEnabled(!config.isMenuAnimationEnabled());
-                    ConfigManager.saveConfig();
-                    addButtons();
-                }
-            ).dimensions(panelX + sidebarWidth + 20, panelY + 40, 100, 20).build());
-        }
+        this.addDrawableChild(ButtonWidget.builder(Text.of("Animations"), button -> selectedTab = "Animations")
+                .dimensions(panelX + 10, panelY + 30, 100, 20).build());
+        this.addDrawableChild(ButtonWidget.builder(Text.of("Performance"), button -> selectedTab = "Performance")
+                .dimensions(panelX + 110, panelY + 30, 100, 20).build());
     }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        ShaderHelper.renderShader(delta);
-        super.render(context, mouseX, mouseY, delta);
+        // Render the blurred background
+        this.renderBackground(context, mouseX, mouseY, delta);
 
+        // Main Panel
         int panelX = (this.width - 400) / 2;
         int panelY = (this.height - 250) / 2;
         int panelWidth = 400;
         int panelHeight = 250;
-        int cornerRadius = 10;
 
-        // Main settings panel with rounded corners
-        context.fill(panelX, panelY + cornerRadius, panelX + panelWidth, panelY + panelHeight - cornerRadius, color(30, 30, 30, 200));
-        context.fill(panelX + cornerRadius, panelY, panelX + panelWidth - cornerRadius, panelY + panelHeight, color(30, 30, 30, 200));
+        // Draw the main panel with rounded corners (conceptual)
+        context.fill(panelX, panelY, panelX + panelWidth, panelY + panelHeight, new Color(0, 0, 0, 150).getRGB());
 
         // Header
-        context.fill(panelX, panelY, panelX + panelWidth, panelY + 30, color(20, 20, 20, 200));
-        context.drawTextWithShadow(this.textRenderer, "⚡ StormClient", panelX + 10, panelY + 10, color(255, 255, 255, 255));
+        context.fill(panelX, panelY, panelX + panelWidth, panelY + 30, new Color(20, 20, 20, 200).getRGB());
+        context.drawTextWithShadow(this.textRenderer, "⚡ Storm Settings", panelX + 10, panelY + 10, Color.WHITE.getRGB());
 
-        // Sidebar
-        int sidebarWidth = 100;
-        context.fill(panelX, panelY + 30, panelX + sidebarWidth, panelY + panelHeight, color(25, 25, 25, 200));
-
-        // Highlight selected addon
-        if ("Menu Animation".equals(selectedAddon)) {
-             context.fill(panelX + 10, panelY + 40, panelX + sidebarWidth - 10, panelY + 60, color(50, 50, 50, 200));
+        if ("Animations".equals(selectedTab)) {
+            context.fill(panelX + 10, panelY + 50, panelX + 110, panelY + 52, Color.YELLOW.getRGB());
+        } else if ("Performance".equals(selectedTab)) {
+            context.fill(panelX + 110, panelY + 50, panelX + 210, panelY + 52, Color.YELLOW.getRGB());
         }
 
-        // Change toggle button color based on state
-        if ("Menu Animation".equals(selectedAddon)) {
-            if(config.isMenuAnimationEnabled()) {
-                context.fill(panelX + sidebarWidth + 20, panelY + 40, panelX + sidebarWidth + 120, panelY + 60, color(255, 255, 0, 150));
-            } else {
-                 context.fill(panelX + sidebarWidth + 20, panelY + 40, panelX + sidebarWidth + 120, panelY + 60, color(255, 0, 0, 150));
-            }
-        }
+
+        super.render(context, mouseX, mouseY, delta);
     }
 
     @Override
     public void close() {
-        ShaderHelper.closeShader();
-        this.client.setScreen(null);
+        this.client.setScreen(parent);
     }
 }

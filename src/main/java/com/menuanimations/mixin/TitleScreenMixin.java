@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(TitleScreen.class)
-public class TitleScreenMixin extends Screen {
+public abstract class TitleScreenMixin extends Screen {
 
     protected TitleScreenMixin(Text title) {
         super(title);
@@ -20,7 +20,7 @@ public class TitleScreenMixin extends Screen {
     @Inject(method = "init", at = @At("TAIL"))
     private void onInit(CallbackInfo ci) {
         this.addDrawableChild(ButtonWidget.builder(Text.of("Storm Settings"), button -> {
-            this.client.setScreen(new SettingsScreen());
+            this.client.setScreen(new SettingsScreen(this));
         }).dimensions(this.width / 2 - 100, this.height / 4 + 48 + 24 * 3, 200, 20).build());
     }
 }
