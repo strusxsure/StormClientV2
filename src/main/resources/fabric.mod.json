@@ -1,23 +1,23 @@
 {
   "schemaVersion": 1,
-  "id": "menuanimations",
+  "id": "stormclient",
   "version": "${version}",
-  "name": "Menu Animations",
-  "description": "Adds fade-in and scale animations to menus, with a Feather-style settings screen.",
+  "name": "Storm Client",
+  "description": "Feather-style settings GUI for Storm Client.",
   "authors": [
     "You!"
   ],
   "contact": {},
   "license": "MIT",
-  "icon": "assets/menuanimations/icon.png",
+  "icon": "assets/stormclient/icon.png",
   "environment": "client",
   "entrypoints": {
     "client": [
-      "com.menuanimations.MenuAnimations"
+      "com.stormclient.StormClient"
     ]
   },
   "mixins": [
-    "menuanimations.mixins.json"
+    "stormclient.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.15.11",
