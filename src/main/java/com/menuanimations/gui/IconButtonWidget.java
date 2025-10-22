@@ -1,0 +1,11 @@
+package com.menuanimations.gui;
+
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.text.Text;
+
+public class IconButtonWidget extends ButtonWidget {
+
+    public IconButtonWidget(int x, int y, int width, int height, Text message, PressAction onPress) {
+        super(x, y, width, height, message, onPress, DEFAULT_NARRATION_SUPPLIER);
+    }
+}
