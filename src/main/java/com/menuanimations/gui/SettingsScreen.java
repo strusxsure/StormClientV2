@@ -7,7 +7,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.text.Text;
-import java.awt.Color;
 
 public class SettingsScreen extends Screen {
 
@@ -58,6 +57,7 @@ public class SettingsScreen extends Screen {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         // Render the blurred background
         this.renderBackground(context, mouseX, mouseY, delta);
+        RenderUtil.drawBlurBackground(context, 0, 0, this.width, this.height, 0.75f);
 
         // Main Panel
         int panelX = (this.width - 400) / 2;
@@ -65,17 +65,17 @@ public class SettingsScreen extends Screen {
         int panelWidth = 400;
         int panelHeight = 250;
 
-        // Draw the main panel with rounded corners (conceptual)
-        context.fill(panelX, panelY, panelX + panelWidth, panelY + panelHeight, new Color(0, 0, 0, 150).getRGB());
+        // Draw the main panel with rounded corners
+        RenderUtil.drawRoundedRect(context, panelX, panelY, panelWidth, panelHeight, 10, 0x96000000);
 
         // Header
-        context.fill(panelX, panelY, panelX + panelWidth, panelY + 30, new Color(20, 20, 20, 200).getRGB());
-        context.drawTextWithShadow(this.textRenderer, "⚡ Storm Settings", panelX + 10, panelY + 10, Color.WHITE.getRGB());
+        context.fill(panelX, panelY, panelX + panelWidth, panelY + 30, 0xC8141414); // Darker semi-transparent black
+        context.drawTextWithShadow(this.textRenderer, "⚡ Storm Settings", panelX + 10, panelY + 10, 0xFFFFFFFF); // White
 
         if ("Animations".equals(selectedTab)) {
-            context.fill(panelX + 10, panelY + 50, panelX + 110, panelY + 52, Color.YELLOW.getRGB());
+            context.fill(panelX + 10, panelY + 50, panelX + 110, panelY + 52, 0xFFFFFF00); // Yellow
         } else if ("Performance".equals(selectedTab)) {
-            context.fill(panelX + 110, panelY + 50, panelX + 210, panelY + 52, Color.YELLOW.getRGB());
+            context.fill(panelX + 110, panelY + 50, panelX + 210, panelY + 52, 0xFFFFFF00); // Yellow
         }
 
 
