@@ -4,14 +4,26 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
-import java.awt.Color;
+import net.minecraft.util.Identifier;
+
 import java.util.function.Consumer;
 
 public class FeatherToggleWidget extends ButtonWidget {
 
+    private static final Identifier WIDGETS_TEXTURE = Identifier.of("menuanimations", "textures/gui/widgets.png");
     private boolean enabled;
     private final String label;
     private final Consumer<Boolean> action;
+
+    // UV coordinates for the toggle switch in widgets.png
+    private static final int TOGGLE_WIDTH = 40;
+    private static final int TOGGLE_HEIGHT = 20;
+    private static final int OFF_U = 0;
+    private static final int OFF_V = 64;
+    private static final int ON_U = 0;
+    private static final int ON_V = 84;
+    private static final int TEXTURE_WIDTH = 256;
+    private static final int TEXTURE_HEIGHT = 256;
 
     public FeatherToggleWidget(int x, int y, int width, int height, String label, boolean initialValue, Consumer<Boolean> action) {
         super(x, y, width, height, Text.of(""), button -> {}, DEFAULT_NARRATION_SUPPLIER);
@@ -29,13 +41,18 @@ public class FeatherToggleWidget extends ButtonWidget {
     @Override
     public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
         MinecraftClient client = MinecraftClient.getInstance();
-        // Background
-        context.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, new Color(50, 50, 50, 200).getRGB());
-        // Slider
-        int sliderX = enabled ? this.getX() + this.width - 20 : this.getX();
-        context.fill(sliderX, this.getY(), sliderX + 20, this.getY() + this.height, enabled ? Color.YELLOW.getRGB() : Color.GRAY.getRGB());
-        // Text
-        context.drawTextWithShadow(client.textRenderer, label, this.getX() + 5, this.getY() + 6, Color.WHITE.getRGB());
-        context.drawTextWithShadow(client.textRenderer, enabled ? "ON" : "OFF", this.getX() + this.width - 30, this.getY() + 6, Color.WHITE.getRGB());
+
+        // Draw the label text
+        context.drawTextWithShadow(client.textRenderer, label, this.getX(), this.getY() + (this.height - 8) / 2, 0xFFFFFFFF); // White
+
+        // Determine which part of the texture to use
+        int u = enabled ? ON_U : OFF_U;
+        int v = enabled ? ON_V : OFF_V;
+
+        // Draw the toggle switch graphic at the right end of the widget area
+        int toggleX = this.getX() + this.width - TOGGLE_WIDTH;
+        int toggleY = this.getY();
+
+        context.drawTexture(WIDGETS_TEXTURE, toggleX, toggleY, u, v, TOGGLE_WIDTH, TOGGLE_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
     }
 }
