@@ -1,5 +1,6 @@
 package com.menuanimations.gui;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.SliderWidget;
@@ -53,6 +54,9 @@ public class FeatherSliderWidget extends SliderWidget {
         // Draw the label
         context.drawTextWithShadow(client.textRenderer, this.getMessage(), this.getX(), this.getY() - 12, 0xFFFFFFFF);
 
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+
         // Draw the slider track
         int trackY = this.getY() + (this.height - TRACK_HEIGHT) / 2;
         context.drawTexture(WIDGETS_TEXTURE, this.getX(), trackY, TRACK_U, TRACK_V, this.width, TRACK_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
@@ -62,5 +66,7 @@ public class FeatherSliderWidget extends SliderWidget {
         int handleX = this.getX() + (int)(this.value * (this.width - HANDLE_WIDTH));
         int handleY = this.getY() + (this.height - HANDLE_HEIGHT) / 2;
         context.drawTexture(WIDGETS_TEXTURE, handleX, handleY, handleU, HANDLE_V, HANDLE_WIDTH, HANDLE_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+
+        RenderSystem.disableBlend();
     }
 }

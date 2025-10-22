@@ -1,5 +1,6 @@
 package com.menuanimations.gui;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -53,6 +54,9 @@ public class FeatherToggleWidget extends ButtonWidget {
         int toggleX = this.getX() + this.width - TOGGLE_WIDTH;
         int toggleY = this.getY();
 
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
         context.drawTexture(WIDGETS_TEXTURE, toggleX, toggleY, u, v, TOGGLE_WIDTH, TOGGLE_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+        RenderSystem.disableBlend();
     }
 }

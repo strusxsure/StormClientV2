@@ -1,5 +1,6 @@
 package com.menuanimations.gui;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
@@ -36,6 +37,9 @@ public class IconButtonWidget extends ButtonWidget {
         int currentU = this.isHovered() || this.selected ? this.hoveredU : this.u;
         int currentV = this.isHovered() || this.selected ? this.hoveredV : this.v;
 
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
         context.drawTexture(WIDGETS_TEXTURE, this.getX(), this.getY(), currentU, currentV, this.width, this.height, this.textureWidth, this.textureHeight);
+        RenderSystem.disableBlend();
     }
 }
